@@ -1,0 +1,86 @@
+#root {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: center;
+}
+
+.logo {
+  height: 6em;
+  padding: 1.5em;
+  will-change: filter;
+  transition: filter 300ms;
+}
+
+.timeline-container {
+  max-width: 500px;
+  margin: 2rem auto;
+  background: #fff2;
+  border-radius: 12px;
+  padding: 2rem 1.5rem;
+  box-shadow: 0 2px 12px #0002;
+}
+
+.event-form {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 2rem;
+}
+.event-form input[type="date"],
+.event-form input[type="text"] {
+  padding: 0.5em;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-size: 1em;
+}
+.event-form button {
+  padding: 0.5em 1em;
+  border-radius: 6px;
+  border: none;
+  background: #646cff;
+  color: #fff;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.event-form button:hover {
+  background: #535bf2;
+}
+
+.timeline-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.timeline-event {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.75em 0;
+  border-bottom: 1px solid #eee;
+}
+.timeline-event:last-child {
+  border-bottom: none;
+}
+.event-date {
+  font-weight: bold;
+  color: #646cff;
+  min-width: 100px;
+}
+.event-desc {
+  flex: 1;
+}
+.empty {
+  color: #888;
+  text-align: center;
+  padding: 1em 0;
+}
+}
+
+.card {
+  padding: 2em;
+}
+
+.read-the-docs {
+  color: #888;
+}
