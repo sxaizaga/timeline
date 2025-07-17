@@ -58,35 +58,55 @@ function App() {
   };
 
   return (
-    <div className="timeline-container">
-      <h1>Línea de Tiempo Interactiva</h1>
-      {error && <div style={{color: 'red', marginBottom: 10}}>{error}</div>}
-      <form className="event-form" onSubmit={handleAddEvent}>
-        <input
-          type="date"
-          value={date}
-          onChange={e => setDate(e.target.value)}
-          required
-        />
-        <input
-          type="text"
-          placeholder="Descripción del evento"
-          value={description}
-          onChange={e => setDescription(e.target.value)}
-          required
-        />
-        <button type="submit">Agregar evento</button>
-      </form>
-      <ul className="timeline-list">
-        {events.length === 0 && <li className="empty">No hay eventos aún.</li>}
-        {events.map((event) => (
-          <li key={event.id || event.date + event.description} className="timeline-event">
-            <span className="event-date">{event.date}</span>
-            <span className="event-desc">{event.description}</span>
-          </li>
-        ))}
-      </ul>
-    </div>
+    <>
+      <div className="timeline-container">
+        <h1>Línea de Tiempo Interactiva</h1>
+        {error && <div style={{color: 'red', marginBottom: 10}}>{error}</div>}
+        <form className="event-form" onSubmit={handleAddEvent}>
+          <input
+            type="date"
+            value={date}
+            onChange={e => setDate(e.target.value)}
+            required
+          />
+          <input
+            type="text"
+            placeholder="Descripción del evento"
+            value={description}
+            onChange={e => setDescription(e.target.value)}
+            required
+          />
+          <button type="submit">Agregar evento</button>
+        </form>
+      </div>
+      <div className="timeline-fullwidth">
+        <ul className="timeline-list">
+          {events.length === 0 && <li className="empty">No hay eventos aún.</li>}
+          {events.map((event, idx) => {
+            const isTop = idx % 2 === 1;
+            return (
+              <li
+                key={event.id || event.date + event.description}
+                className={`timeline-event${isTop ? ' timeline-event--top' : ' timeline-event--bottom'}`}
+              >
+                <div className="timeline-node-wrapper"><span className="event-date"></span></div>
+                {isTop ? (
+                  <div className="timeline-card timeline-card--top">
+                    <span className="event-date-label">{event.date}</span>
+                    <span className="event-desc">{event.description}</span>
+                  </div>
+                ) : (
+                  <div className="timeline-card timeline-card--bottom">
+                    <span className="event-date-label">{event.date}</span>
+                    <span className="event-desc">{event.description}</span>
+                  </div>
+                )}
+              </li>
+            );
+          })}
+        </ul>
+      </div>
+    </>
   );
 }
 
