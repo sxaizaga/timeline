@@ -23,7 +23,6 @@ function App() {
   const [date, setDate] = useState('');
   const [description, setDescription] = useState('');
   const [error, setError] = useState('');
-  const [showForm, setShowForm] = useState(true);
 
   useEffect(() => {
     // Escuchar cambios en tiempo real
@@ -90,7 +89,7 @@ function App() {
       </div>
       <div className="event-form-footer">
         {error && <div style={{color: 'red', marginBottom: 10}}>{error}</div>}
-        {showForm && (
+        
           <form className="event-form" onSubmit={handleAddEvent} style={{marginBottom: 0}}>
             <input
               type="date"
@@ -124,7 +123,7 @@ function App() {
               ×
             </button>
           </form>
-        )}
+        
       </div>
     </>
   );
