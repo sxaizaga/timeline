@@ -157,6 +157,23 @@ body {
   justify-content: center;
   overflow: visible;
 }
+
+/* Eventos de kushkenos-hitos: colores variados y legibles */
+.kushkenos-event .timeline-card,
+.kushkenos-event .event-desc,
+.kushkenos-event .event-date {
+  /* El color de fondo y texto se asigna inline desde React */
+}
+
+/* Opcional: resaltar el borde para kushkenos-hitos */
+.kushkenos-event .timeline-card {
+  border: 2.5px solid #fff;
+  box-shadow: 0 4px 18px #0003;
+}
+.kushkenos-event .event-date {
+  border: 4px solid #fff;
+  box-shadow: 0 4px 16px #0003;
+}
 .timeline-node-wrapper {
   position: absolute;
   left: 50%;
