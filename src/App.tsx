@@ -17,11 +17,13 @@ type TimelineEvent = {
   description: string;
 };
 
+
 function App() {
   const [events, setEvents] = useState<TimelineEvent[]>([]);
   const [date, setDate] = useState('');
   const [description, setDescription] = useState('');
   const [error, setError] = useState('');
+  const [showForm, setShowForm] = useState(true);
 
   useEffect(() => {
     // Escuchar cambios en tiempo real
@@ -59,26 +61,6 @@ function App() {
 
   return (
     <>
-      <div className="timeline-container">
-        <h1>Línea de Tiempo Interactiva</h1>
-        {error && <div style={{color: 'red', marginBottom: 10}}>{error}</div>}
-        <form className="event-form" onSubmit={handleAddEvent}>
-          <input
-            type="date"
-            value={date}
-            onChange={e => setDate(e.target.value)}
-            required
-          />
-          <input
-            type="text"
-            placeholder="Descripción del evento"
-            value={description}
-            onChange={e => setDescription(e.target.value)}
-            required
-          />
-          <button type="submit">Agregar evento</button>
-        </form>
-      </div>
       <div className="timeline-fullwidth">
         <ul className="timeline-list">
           {events.length === 0 && <li className="empty">No hay eventos aún.</li>}
@@ -105,6 +87,44 @@ function App() {
             );
           })}
         </ul>
+      </div>
+      <div className="event-form-footer">
+        {error && <div style={{color: 'red', marginBottom: 10}}>{error}</div>}
+        {showForm && (
+          <form className="event-form" onSubmit={handleAddEvent} style={{marginBottom: 0}}>
+            <input
+              type="date"
+              value={date}
+              onChange={e => setDate(e.target.value)}
+              required
+            />
+            <input
+              type="text"
+              placeholder="Descripción del evento"
+              value={description}
+              onChange={e => setDescription(e.target.value)}
+              required
+            />
+            <button type="submit">Agregar evento</button>
+            <button
+              type="button"
+              className="close-form-btn"
+              aria-label="Cerrar"
+              style={{
+                marginLeft: 8,
+                background: '#fff',
+                color: '#00FABF',
+                border: '1px solid #00FABF',
+                borderRadius: 6,
+                padding: '0.5em 1em',
+                fontWeight: 'bold',
+                cursor: 'pointer',
+              }}
+            >
+              ×
+            </button>
+          </form>
+        )}
       </div>
     </>
   );
