@@ -380,9 +380,30 @@ function App() {
               style={{ display: 'none' }}
             />
           </label>
-          {image && (
-            <span style={{ color: '#333', fontSize: '0.95em', marginRight: 8 }}>{image.name}</span>
-          )}
+{image && (
+  <span
+    style={{
+      background: 'rgba(233, 233, 233, 0.78)',
+      color: '#00332A',
+      fontSize: '1em',
+      marginRight: 8,
+      padding: '0.35em 0.9em',
+      borderRadius: 16,
+      border: '1.5px solid #00FABF',
+      fontWeight: 600,
+      boxShadow: '0 1px 6px #0001',
+      display: 'inline-block',
+      maxWidth: 180,
+      overflow: 'hidden',
+      textOverflow: 'ellipsis',
+      whiteSpace: 'nowrap',
+      verticalAlign: 'middle',
+    }}
+    title={image.name}
+  >
+    {image.name}
+  </span>
+)}
           <button
             type="submit"
             style={{
