@@ -13,6 +13,7 @@ import {
 type TimelineEvent = {
   id?: string;
   date: string;
+  name?: string;
   description: string;
   imageUrl?: string;
   source: 'kushki-hitos' | 'kushkenos-hitos';
@@ -27,6 +28,7 @@ function App() {
   const [image, setImage] = useState<File | null>(null);
   const [error, setError] = useState('');
   const [selectedIdx, setSelectedIdx] = useState<number | null>(null);
+  const [name, setName] = useState('');
 
   useEffect(() => {
     // Escuchar cambios en tiempo real de ambas colecciones
@@ -79,7 +81,7 @@ function App() {
 
   const handleAddEvent = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!date || !description) return;
+    if (!date || !name || !description) return;
     try {
       let imageUrl = '';
       if (image) {
@@ -111,12 +113,14 @@ function App() {
         imageUrl = data.url;
       }
       await addDoc(collection(db, 'kushkenos-hitos'), {
-        date,
-        description,
-        imageUrl: imageUrl || null,
-        created: Timestamp.now(),
-      });
+  date,
+  name,
+  description,
+  imageUrl: imageUrl || null,
+  created: Timestamp.now(),
+});
       setDate('');
+      setName('');
       setDescription('');
       setImage(null);
     } catch {
@@ -179,11 +183,17 @@ function App() {
                 {isTop ? (
                   <div className="timeline-card timeline-card--top" style={cardStyle}>
                     <span className="event-date-label">{event.date}</span>
+                    {event.name && (
+                      <span className="event-name" style={{ fontWeight: 700, fontSize: '1.1em', color: cardStyle.color || undefined, marginBottom: 4 }}>{event.name}</span>
+                    )}
                     <span className="event-desc" style={cardStyle}>{event.description}</span>
                   </div>
                 ) : (
                   <div className="timeline-card timeline-card--bottom" style={cardStyle}>
                     <span className="event-date-label">{event.date}</span>
+                    {event.name && (
+                      <span className="event-name" style={{ fontWeight: 700, fontSize: '1.1em', color: cardStyle.color || undefined, marginBottom: 4 }}>{event.name}</span>
+                    )}
                     <span className="event-desc" style={cardStyle}>{event.description}</span>
                   </div>
                 )}
@@ -268,6 +278,14 @@ function App() {
               return today.toISOString().split('T')[0];
             })()}
           />
+          <input
+  type="text"
+  placeholder="Nombre de la persona"
+  value={name}
+  onChange={e => setName(e.target.value)}
+  required
+  style={{ minWidth: 120 }}
+/>
           <input
             type="text"
             placeholder="Descripción del evento"
