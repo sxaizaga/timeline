@@ -40,9 +40,13 @@ function App() {
         const kushkiEvents = snapshotKushki.docs.map((doc) => ({
           id: doc.id,
           ...doc.data(),
+          source: 'kushki-hitos',
         })) as TimelineEvent[];
-
-        setEvents((prevEvents) => [...kushkiEvents, ...prevEvents.filter((event) => event.source === 'kushkenos-hitos')]);
+        setEvents((prev) => {
+          // Si ya hay eventos de ambas fuentes, combinamos y ordenamos
+          const kushkenos = prev.filter(e => e.source === 'kushkenos-hitos');
+          return sortEvents([...kushkiEvents, ...kushkenos]);
+        });
       });
 
       unsubKushkenos = onSnapshot(qKushkenos, (snapshotKushkenos) => {
@@ -51,7 +55,11 @@ function App() {
           ...doc.data(),
         })) as TimelineEvent[];
 
-        setEvents((prevEvents) => [...prevEvents.filter((event) => event.source === 'kushki-hitos'), ...kushkenosEvents]);
+        setEvents((prev) => {
+          // Si ya hay eventos de ambas fuentes, combinamos y ordenamos
+          const kushki = prev.filter(e => e.source === 'kushki-hitos');
+          return sortEvents([...kushki, ...kushkenosEvents]);
+        });
       });
     } catch (error) {
       console.error('Error al escuchar colecciones:', error);
@@ -63,6 +71,11 @@ function App() {
       if (unsubKushkenos) unsubKushkenos();
     };
   }, []);
+
+  function sortEvents(evts: TimelineEvent[]) {
+    // Ordenar por fecha ascendente (YYYY-MM-DD)
+    return [...evts].sort((a, b) => a.date.localeCompare(b.date));
+  }
 
   const handleAddEvent = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -126,7 +139,7 @@ function App() {
         <ul className="timeline-list">
           {events.map((event, idx) => {
             const isTop = idx % 2 === 1;
-            let cardStyle: { background?: string; color?: string } = {};
+            let cardStyle = {};
             let dateStyle = {};
             let eventClass = '';
             if (event.source === 'kushki-hitos') {
