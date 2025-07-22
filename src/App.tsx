@@ -80,11 +80,35 @@ function App() {
     return [...evts].sort((a, b) => a.date.localeCompare(b.date));
   }
 
+  // BAD_WORDS se obtiene de la variable de entorno VITE_BAD_WORDS_LIST
+  const BAD_WORDS = (import.meta.env.VITE_BAD_WORDS_LIST || '').split(',').map(w => w.trim()).filter(Boolean);
+
+  function contienePalabrasNoPermitidas(text: string): boolean {
+    const normalize = (str: string) =>
+      str
+        .normalize('NFD')
+        .replace(/\p{Diacritic}/gu, '')
+        .toLowerCase()
+        .replace(/[^a-z0-9áéíóúüñ\s]/gi, ' '); // deja solo letras, números y espacios
+
+    const normalizedText = normalize(text);
+    return BAD_WORDS.some(word => {
+      const normalizedWord = normalize(word);
+      // Busca la palabra como palabra completa (bordes de palabra)
+      const regex = new RegExp(`\\b${normalizedWord.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\b`, 'i');
+      return regex.test(normalizedText);
+    });
+  }
+
   const handleAddEvent = async (e: React.FormEvent) => {
     e.preventDefault();
     setTouched({ date: true, name: true, description: true });
     if (!date || !name || !description) {
       setError('Por favor, completa todos los campos obligatorios.');
+      return;
+    }
+    if (contienePalabrasNoPermitidas(description)) {
+      setError('La descripción contiene palabras no permitidas. Por favor, usa un lenguaje apropiado.');
       return;
     }
     // Solo limpiar el error si todos los campos están completos
