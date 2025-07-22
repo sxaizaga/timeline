@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { notifyTelegram } from './telegram';
 import './App.css';
 import { db } from './firebase';
 import {
@@ -83,21 +84,35 @@ function App() {
   // BAD_WORDS se obtiene de la variable de entorno VITE_BAD_WORDS_LIST
   const BAD_WORDS = (import.meta.env.VITE_BAD_WORDS_LIST || '').split(',').map(w => w.trim()).filter(Boolean);
 
-  function contienePalabrasNoPermitidas(text: string): boolean {
+  // Devuelve la palabra prohibida encontrada o null
+  async function contienePalabrasNoPermitidas(text: string): Promise<string | null> {
     const normalize = (str: string) =>
       str
         .normalize('NFD')
         .replace(/\p{Diacritic}/gu, '')
         .toLowerCase()
-        .replace(/[^a-z0-9áéíóúüñ\s]/gi, ' '); // deja solo letras, números y espacios
+        .replace(/[^a-z0-9áéíóúüñ\s]/gi, ' ');
 
     const normalizedText = normalize(text);
-    return BAD_WORDS.some(word => {
+    for (const word of BAD_WORDS) {
       const normalizedWord = normalize(word);
-      // Busca la palabra como palabra completa (bordes de palabra)
       const regex = new RegExp(`\\b${normalizedWord.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\b`, 'i');
-      return regex.test(normalizedText);
-    });
+      if (regex.test(normalizedText)) {
+        // Obtener IP pública
+        let ip = '';
+        try {
+          const res = await fetch('https://api.ipify.org?format=json');
+          if (res.ok) {
+            const data = await res.json();
+            ip = data.ip;
+          }
+        } catch {}
+        // Notificar a Telegram
+        notifyTelegram({ description: text, badWord: word, ip });
+        return word;
+      }
+    }
+    return null;
   }
 
   const handleAddEvent = async (e: React.FormEvent) => {
@@ -107,7 +122,8 @@ function App() {
       setError('Por favor, completa todos los campos obligatorios.');
       return;
     }
-    if (contienePalabrasNoPermitidas(description)) {
+    const badWord = await contienePalabrasNoPermitidas(description);
+    if (badWord) {
       setError('La descripción contiene palabras no permitidas. Por favor, usa un lenguaje apropiado.');
       return;
     }
