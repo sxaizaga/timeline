@@ -1,7 +1,7 @@
 // AWS Lambda handler para recibir imagen en base64, guardar en S3 y devolver una URL firmada de máximo tiempo
 // Requiere: AWS SDK v2 (handler para Node.js 18.x o superior)
 
-const AWS = require('aws-sdk');
+import AWS from 'aws-sdk';
 const s3 = new AWS.S3();
 
 const BUCKET = process.env.AWS_BUCKET_NAME;

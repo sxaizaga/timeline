@@ -26,7 +26,7 @@ function App() {
   const [description, setDescription] = useState('');
   const [image, setImage] = useState<File | null>(null);
   const [error, setError] = useState('');
-  const [hoveredIdx, setHoveredIdx] = useState<number | null>(null);
+  const [selectedIdx, setSelectedIdx] = useState<number | null>(null);
 
   useEffect(() => {
     // Escuchar cambios en tiempo real de ambas colecciones
@@ -122,11 +122,11 @@ function App() {
 
   return (
     <>
-      <div className="timeline-container">
-        <ul className="timeline">
+      <div className="timeline-container" style={{ maxWidth: '100vw', width: '100%', overflowX: 'auto', background: 'none', boxShadow: 'none', padding: 0 }}>
+        <ul className="timeline-list">
           {events.map((event, idx) => {
             const isTop = idx % 2 === 1;
-            let cardStyle = {};
+            let cardStyle: { background?: string; color?: string } = {};
             let dateStyle = {};
             let eventClass = '';
             if (event.source === 'kushki-hitos') {
@@ -141,60 +141,37 @@ function App() {
               <li
                 key={event.id || event.date + event.description}
                 className={`timeline-event${isTop ? ' timeline-event--top' : ' timeline-event--bottom'}${eventClass}`}
-                onMouseEnter={() => setHoveredIdx(idx)}
-                onMouseLeave={() => setHoveredIdx(null)}
-                style={{ position: 'relative' }}
+                onClick={() => setSelectedIdx(selectedIdx === idx ? null : idx)}
+                style={{ position: 'relative', cursor: event.imageUrl ? 'pointer' : 'default' }}
               >
                 <div className="timeline-node-wrapper">
-                  <span className="event-date" style={dateStyle}></span>
+                  <span className="event-date" style={dateStyle}>
+                    {event.imageUrl ? (
+                      <img
+                        src={event.imageUrl}
+                        alt="preview adjunto"
+                        style={{
+                          width: 36,
+                          height: 36,
+                          objectFit: 'cover',
+                          borderRadius: '50%',
+                          border: '2px solid #fff',
+                          boxShadow: '0 2px 8px #0003',
+                          display: 'block',
+                        }}
+                      />
+                    ) : null}
+                  </span>
                 </div>
                 {isTop ? (
                   <div className="timeline-card timeline-card--top" style={cardStyle}>
                     <span className="event-date-label">{event.date}</span>
                     <span className="event-desc" style={cardStyle}>{event.description}</span>
-                    {event.imageUrl && hoveredIdx === idx && (
-                      <img
-                        src={event.imageUrl}
-                        alt="Imagen del evento"
-                        style={{
-                          maxWidth: 220,
-                          maxHeight: 180,
-                          borderRadius: 12,
-                          marginTop: 10,
-                          boxShadow: '0 4px 18px #0006',
-                          position: 'absolute',
-                          left: '50%',
-                          top: '100%',
-                          transform: 'translate(-50%, 10px)',
-                          zIndex: 10,
-                          background: '#fff',
-                        }}
-                      />
-                    )}
                   </div>
                 ) : (
                   <div className="timeline-card timeline-card--bottom" style={cardStyle}>
                     <span className="event-date-label">{event.date}</span>
                     <span className="event-desc" style={cardStyle}>{event.description}</span>
-                    {event.imageUrl && hoveredIdx === idx && (
-                      <img
-                        src={event.imageUrl}
-                        alt="Imagen del evento"
-                        style={{
-                          maxWidth: 220,
-                          maxHeight: 180,
-                          borderRadius: 12,
-                          marginTop: 10,
-                          boxShadow: '0 4px 18px #0006',
-                          position: 'absolute',
-                          left: '50%',
-                          top: '100%',
-                          transform: 'translate(-50%, 10px)',
-                          zIndex: 10,
-                          background: '#fff',
-                        }}
-                      />
-                    )}
                   </div>
                 )}
               </li>
@@ -202,6 +179,69 @@ function App() {
           })}
         </ul>
       </div>
+
+      {/* Dialog para mostrar la imagen */}
+      {selectedIdx !== null && events[selectedIdx]?.imageUrl && (
+        <div
+          className="timeline-image-dialog"
+          onClick={() => setSelectedIdx(null)}
+          style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            width: '100vw',
+            height: '100vh',
+            background: 'rgba(0,0,0,0.7)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            zIndex: 9999,
+            cursor: 'pointer',
+          }}
+        >
+          <div style={{ position: 'relative', display: 'flex', flexDirection: 'column', alignItems: 'center' }} onClick={e => e.stopPropagation()}>
+            <button
+              onClick={() => setSelectedIdx(null)}
+              style={{
+                position: 'absolute',
+                top: -24,
+                right: -24,
+                background: '#fff',
+                border: 'none',
+                borderRadius: 6,
+                width: 36,
+                height: 36,
+                fontSize: 22,
+                fontWeight: 'bold',
+                color: '#333',
+                boxShadow: '0 2px 8px #0005',
+                cursor: 'pointer',
+                zIndex: 10001,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                transition: 'background 0.2s',
+              }}
+              aria-label="Cerrar imagen"
+            >
+              ×
+            </button>
+            <img
+              src={events[selectedIdx].imageUrl}
+              alt="Imagen del evento"
+              style={{
+                maxWidth: '90vw',
+                maxHeight: '80vh',
+                borderRadius: 16,
+                boxShadow: '0 8px 32px #000a',
+                background: '#fff',
+                padding: 8,
+              }}
+            />
+          </div>
+        </div>
+      )}
+
       <div className="event-form-footer">
         {error && <div style={{color: 'red', marginBottom: 10}}>{error}</div>}
         <form className="event-form" onSubmit={handleAddEvent} style={{marginBottom: 0}}>
