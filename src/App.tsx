@@ -29,6 +29,7 @@ function App() {
   const [error, setError] = useState('');
   const [selectedIdx, setSelectedIdx] = useState<number | null>(null);
   const [name, setName] = useState('');
+  const [touched, setTouched] = useState<{date: boolean; name: boolean; description: boolean}>({date: false, name: false, description: false});
 
   useEffect(() => {
     // Escuchar cambios en tiempo real de ambas colecciones
@@ -81,7 +82,13 @@ function App() {
 
   const handleAddEvent = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!date || !name || !description) return;
+    setTouched({ date: true, name: true, description: true });
+    if (!date || !name || !description) {
+      setError('Por favor, completa todos los campos obligatorios.');
+      return;
+    }
+    // Solo limpiar el error si todos los campos están completos
+    if (error) setError('');
     try {
       let imageUrl = '';
       if (image) {
@@ -123,6 +130,7 @@ function App() {
       setName('');
       setDescription('');
       setImage(null);
+      setTouched({ date: false, name: false, description: false });
     } catch {
       setError('Error al guardar el evento. Revisa la configuración de Firebase o el backend.');
     }
@@ -265,33 +273,89 @@ function App() {
         </div>
       )}
 
+      {/* Mensaje de error fijo arriba tipo toast */}
+      {error && (
+        <div
+          style={{
+            position: 'fixed',
+            top: 80,
+            left: '50%',
+            transform: 'translateX(-50%)',
+            color: 'white',
+            background: 'red',
+            padding: '14px 36px',
+            borderRadius: 10,
+            zIndex: 9999,
+            fontWeight: 'bold',
+            boxShadow: '0 4px 24px #0007',
+            fontSize: '1.15em',
+            maxWidth: '90vw',
+            textAlign: 'center',
+            opacity: 0.97,
+            letterSpacing: '0.5px',
+            animation: 'fadeInDown 0.4s',
+          }}
+        >
+          {error}
+        </div>
+      )}
+      {/* Animación para el toast */}
+      <style>{`
+        @keyframes fadeInDown {
+          from { opacity: 0; transform: translateX(-50%) translateY(-30px); }
+          to { opacity: 0.97; transform: translateX(-50%) translateY(0); }
+        }
+      `}</style>
       <div className="event-form-footer">
-        {error && <div style={{color: 'red', marginBottom: 10}}>{error}</div>}
         <form className="event-form" onSubmit={handleAddEvent} style={{marginBottom: 0}}>
           <input
             type="date"
             value={date}
-            onChange={e => setDate(e.target.value)}
-            required
+            onChange={e => {
+              setDate(e.target.value);
+              setTouched(t => ({ ...t, date: true }));
+              if (error && e.target.value && name && description) setError('');
+            }}
             max={(() => {
               const today = new Date();
               return today.toISOString().split('T')[0];
             })()}
+            style={{
+              borderColor: touched.date && !date ? 'red' : undefined,
+              outline: touched.date && !date ? '2px solid red' : undefined,
+              marginBottom: 0,
+            }}
           />
           <input
-  type="text"
-  placeholder="Nombre de la persona"
-  value={name}
-  onChange={e => setName(e.target.value)}
-  required
-  style={{ minWidth: 120 }}
-/>
+            type="text"
+            placeholder="Nombre de la persona"
+            value={name}
+            onChange={e => {
+              setName(e.target.value);
+              setTouched(t => ({ ...t, name: true }));
+              if (error && date && e.target.value && description) setError('');
+            }}
+            style={{
+              minWidth: 120,
+              borderColor: touched.name && !name ? 'red' : undefined,
+              outline: touched.name && !name ? '2px solid red' : undefined,
+              marginBottom: 0,
+            }}
+          />
           <input
             type="text"
             placeholder="Descripción del evento"
             value={description}
-            onChange={e => setDescription(e.target.value)}
-            required
+            onChange={e => {
+              setDescription(e.target.value);
+              setTouched(t => ({ ...t, description: true }));
+              if (error && date && name && e.target.value) setError('');
+            }}
+            style={{
+              borderColor: touched.description && !description ? 'red' : undefined,
+              outline: touched.description && !description ? '2px solid red' : undefined,
+              marginBottom: 0,
+            }}
           />
           <label htmlFor="image-upload" style={{
             display: 'inline-block',
