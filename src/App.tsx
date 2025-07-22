@@ -263,6 +263,10 @@ function App() {
             value={date}
             onChange={e => setDate(e.target.value)}
             required
+            max={(() => {
+              const today = new Date();
+              return today.toISOString().split('T')[0];
+            })()}
           />
           <input
             type="text"
@@ -271,13 +275,48 @@ function App() {
             onChange={e => setDescription(e.target.value)}
             required
           />
-          <input
-            type="file"
-            accept="image/*"
-            onChange={e => setImage(e.target.files && e.target.files[0] ? e.target.files[0] : null)}
-            style={{ maxWidth: 120 }}
-          />
-          <button type="submit">Agregar evento</button>
+          <label htmlFor="image-upload" style={{
+            display: 'inline-block',
+            padding: '0.5em 1em',
+            borderRadius: 6,
+            border: 'none',
+            background: '#00FABF',
+            color: '#00332A',
+            fontWeight: 'bold',
+            cursor: 'pointer',
+            marginRight: 8,
+            marginBottom: 0,
+            fontSize: '1em',
+            transition: 'background 0.2s',
+          }}>
+            Adjuntar imagen
+            <input
+              id="image-upload"
+              type="file"
+              accept="image/*"
+              onChange={e => setImage(e.target.files && e.target.files[0] ? e.target.files[0] : null)}
+              style={{ display: 'none' }}
+            />
+          </label>
+          {image && (
+            <span style={{ color: '#333', fontSize: '0.95em', marginRight: 8 }}>{image.name}</span>
+          )}
+          <button
+            type="submit"
+            style={{
+              padding: '0.5em 1em',
+              borderRadius: 6,
+              border: 'none',
+              background: '#00FABF',
+              color: '#00332A',
+              fontWeight: 'bold',
+              cursor: 'pointer',
+              fontSize: '1em',
+              transition: 'background 0.2s',
+            }}
+          >
+            Agregar evento
+          </button>
         </form>
       </div>
     </>
