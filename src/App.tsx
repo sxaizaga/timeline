@@ -328,7 +328,7 @@ function App() {
           />
           <input
             type="text"
-            placeholder="Nombre de la persona"
+            placeholder="Nombre y Apellido"
             value={name}
             onChange={e => {
               setName(e.target.value);
