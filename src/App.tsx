@@ -122,7 +122,7 @@ function App() {
 
   return (
     <>
-      <div className="timeline-container" style={{ maxWidth: '100vw', width: '100%', overflowX: 'auto', background: 'none', boxShadow: 'none', padding: 0 }}>
+      <div className="timeline-fullwidth">
         <ul className="timeline-list">
           {events.map((event, idx) => {
             const isTop = idx % 2 === 1;
