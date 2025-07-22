@@ -151,7 +151,7 @@ function App() {
         <ul className="timeline-list">
           {events.map((event, idx) => {
             const isTop = idx % 2 === 1;
-            let cardStyle = {};
+            let cardStyle: { background?: string; color?: string } = {};
             let dateStyle = {};
             let eventClass = '';
             if (event.source === 'kushki-hitos') {
