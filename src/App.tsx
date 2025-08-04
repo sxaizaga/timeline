@@ -58,6 +58,7 @@ function App() {
         const kushkenosEvents = snapshotKushkenos.docs.map((doc) => ({
           id: doc.id,
           ...doc.data(),
+          source: 'kushkenos-hitos',
         })) as TimelineEvent[];
 
         setEvents((prev) => {
@@ -331,31 +332,51 @@ function App() {
           100% { transform: rotate(360deg); }
         }
       `}</style>
-      <div className="event-form-footer">
-        {/* Indicador de carga de imagen */}
-        {uploading && (
-          <div style={{
+      {/* Loader pantalla completa al subir imagen */}
+      {uploading && (
+        <div
+          style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            width: '100vw',
+            height: '100vh',
+            background: 'rgba(0,0,0,0.45)',
+            zIndex: 99999,
             display: 'flex',
             alignItems: 'center',
-            gap: 10,
-            marginBottom: 8,
-            color: '#00332A',
-            fontWeight: 'bold',
-            fontSize: '1.08em',
-          }}>
-            <span className="loader-icon" style={{
-              width: 22,
-              height: 22,
-              border: '3px solid #00FABF',
-              borderTop: '3px solid #fff',
+            justifyContent: 'center',
+            flexDirection: 'column',
+          }}
+        >
+          <span
+            className="loader-icon"
+            style={{
+              width: 60,
+              height: 60,
+              border: '7px solid #00FABF',
+              borderTop: '7px solid #fff',
               borderRadius: '50%',
               animation: 'spin 0.8s linear infinite',
               display: 'inline-block',
-            }}></span>
+              marginBottom: 24,
+              boxShadow: '0 2px 16px #0003',
+            }}
+          ></span>
+          <span
+            style={{
+              color: '#fff',
+              fontWeight: 'bold',
+              fontSize: '1.35em',
+              textShadow: '0 2px 8px #0007',
+              letterSpacing: '0.5px',
+            }}
+          >
             Subiendo imagen...
-          </div>
-        )}
-        {/* Mensaje de carga exitosa */}
+          </span>
+        </div>
+      )}
+        {/* Mensaje de carga exitosa centrado pantalla */}
         {uploadSuccess && (
           <div style={{
             position: 'fixed',
