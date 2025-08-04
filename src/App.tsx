@@ -317,46 +317,86 @@ function App() {
           to { opacity: 0.97; transform: translateX(-50%) translateY(0); }
         }
       `}</style>
-      <div className="event-form-footer">
-        {/* Indicador de carga de imagen */}
-        {uploading && (
-          <div style={{
+      {/* Loader pantalla completa al subir imagen */}
+      {uploading && (
+        <div
+          style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            width: '100vw',
+            height: '100vh',
+            background: 'rgba(0,0,0,0.45)',
+            zIndex: 99999,
             display: 'flex',
             alignItems: 'center',
-            gap: 10,
-            marginBottom: 8,
-            color: '#00332A',
-            fontWeight: 'bold',
-            fontSize: '1.08em',
-          }}>
-            <span className="loader-icon" style={{
-              width: 22,
-              height: 22,
-              border: '3px solid #00FABF',
-              borderTop: '3px solid #fff',
+            justifyContent: 'center',
+            flexDirection: 'column',
+          }}
+        >
+          <span
+            className="loader-icon"
+            style={{
+              width: 60,
+              height: 60,
+              border: '7px solid #00FABF',
+              borderTop: '7px solid #fff',
               borderRadius: '50%',
               animation: 'spin 0.8s linear infinite',
               display: 'inline-block',
-            }}></span>
+              marginBottom: 24,
+              boxShadow: '0 2px 16px #0003',
+            }}
+          ></span>
+          <span
+            style={{
+              color: '#fff',
+              fontWeight: 'bold',
+              fontSize: '1.35em',
+              textShadow: '0 2px 8px #0007',
+              letterSpacing: '0.5px',
+            }}
+          >
             Subiendo imagen...
-          </div>
-        )}
-        {/* Mensaje de carga exitosa */}
+          </span>
+        </div>
+      )}
+        {/* Mensaje de carga exitosa centrado pantalla */}
         {uploadSuccess && (
-          <div style={{
-            color: '#fff',
-            background: '#00FABF',
-            padding: '8px 24px',
-            borderRadius: 8,
-            fontWeight: 'bold',
-            fontSize: '1.08em',
-            marginBottom: 8,
-            boxShadow: '0 2px 8px #0002',
-            animation: 'fadeInDown 0.4s',
-            letterSpacing: '0.5px',
-            display: 'inline-block',
-          }}>
-            Imagen subida exitosamente
+          <div
+            style={{
+              position: 'fixed',
+              top: 0,
+              left: 0,
+              width: '100vw',
+              height: '100vh',
+              background: 'rgba(0,0,0,0.45)',
+              zIndex: 99999,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              flexDirection: 'column',
+              pointerEvents: 'none',
+            }}
+          >
+            <div
+              style={{
+                color: '#fff',
+                background: '#00FABF',
+                padding: '18px 48px',
+                borderRadius: 16,
+                fontWeight: 'bold',
+                fontSize: '1.35em',
+                boxShadow: '0 4px 24px #0007',
+                animation: 'fadeInDown 0.4s',
+                letterSpacing: '0.5px',
+                textAlign: 'center',
+                textShadow: '0 2px 8px #0007',
+                pointerEvents: 'auto',
+              }}
+            >
+              Imagen subida exitosamente
+            </div>
           </div>
         )}
         <form className="event-form" onSubmit={handleAddEvent} style={{marginBottom: 0}}>
