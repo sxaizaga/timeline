@@ -350,31 +350,46 @@ function App() {
           to { opacity: 0.97; transform: translate(-50%, -50%) scale(1); }
         }
       `}</style>
-      <div className="event-form-footer">
-        {/* Indicador de carga de imagen */}
-        {uploading && (
-          <div style={{
+      {/* Indicador de carga de imagen centrado */}
+      {uploading && (
+        <div
+          style={{
+            position: 'fixed',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            color: '#00332A',
+            background: '#fff',
+            padding: '20px 32px',
+            borderRadius: 12,
+            zIndex: 9999,
+            fontWeight: 'bold',
+            boxShadow: '0 4px 24px #0007',
+            fontSize: '1.15em',
+            textAlign: 'center',
+            opacity: 0.97,
+            letterSpacing: '0.5px',
+            animation: 'fadeInCenter 0.4s',
             display: 'flex',
             alignItems: 'center',
-            gap: 10,
-            marginBottom: 8,
-            color: '#00332A',
-            fontWeight: 'bold',
-            fontSize: '1.08em',
-          }}>
-            <span className="loader-icon" style={{
-              width: 22,
-              height: 22,
-              border: '3px solid #00FABF',
-              borderTop: '3px solid #fff',
-              borderRadius: '50%',
-              animation: 'spin 0.8s linear infinite',
-              display: 'inline-block',
-            }}></span>
-            Subiendo imagen...
-          </div>
-        )}
+            gap: 12,
+            border: '2px solid #00FABF',
+          }}
+        >
+          <span className="loader-icon" style={{
+            width: 24,
+            height: 24,
+            border: '3px solid #00FABF',
+            borderTop: '3px solid #fff',
+            borderRadius: '50%',
+            animation: 'spin 0.8s linear infinite',
+            display: 'inline-block',
+          }}></span>
+          Subiendo imagen...
+        </div>
+      )}
 
+      <div className="event-form-footer">
         <form className="event-form" onSubmit={handleAddEvent} style={{marginBottom: 0}}>
           <input
             type="date"
