@@ -58,6 +58,7 @@ function App() {
         const kushkenosEvents = snapshotKushkenos.docs.map((doc) => ({
           id: doc.id,
           ...doc.data(),
+          source: 'kushkenos-hitos',
         })) as TimelineEvent[];
 
         setEvents((prev) => {
@@ -514,14 +515,14 @@ function App() {
             {uploading ? 'Subiendo...' : 'Agregar evento'}
           </button>
         </form>
-      {/* Animación para el loader */}
-      <style>{`
-        @keyframes spin {
-          0% { transform: rotate(0deg); }
-          100% { transform: rotate(360deg); }
-        }
-      `}</style>
-      </div>
+        
+        {/* Animación para el loader */}
+        <style>{`
+          @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+          }
+        `}</style>
     </>
   );
 }
