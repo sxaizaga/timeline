@@ -311,11 +311,43 @@ function App() {
           {error}
         </div>
       )}
+
+      {/* Mensaje de éxito fijo en el centro tipo toast */}
+      {uploadSuccess && (
+        <div
+          style={{
+            position: 'fixed',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            color: '#00332A',
+            background: '#00FABF',
+            padding: '14px 36px',
+            borderRadius: 10,
+            zIndex: 9999,
+            fontWeight: 'bold',
+            boxShadow: '0 4px 24px #0007',
+            fontSize: '1.15em',
+            maxWidth: '90vw',
+            textAlign: 'center',
+            opacity: 0.97,
+            letterSpacing: '0.5px',
+            animation: 'fadeInCenter 0.4s',
+          }}
+        >
+          Imagen subida exitosamente
+        </div>
+      )}
+
       {/* Animación para el toast */}
       <style>{`
         @keyframes fadeInDown {
           from { opacity: 0; transform: translateX(-50%) translateY(-30px); }
           to { opacity: 0.97; transform: translateX(-50%) translateY(0); }
+        }
+        @keyframes fadeInCenter {
+          from { opacity: 0; transform: translate(-50%, -50%) scale(0.8); }
+          to { opacity: 0.97; transform: translate(-50%, -50%) scale(1); }
         }
       `}</style>
       <div className="event-form-footer">
@@ -342,24 +374,7 @@ function App() {
             Subiendo imagen...
           </div>
         )}
-        {/* Mensaje de carga exitosa */}
-        {uploadSuccess && (
-          <div style={{
-            color: '#fff',
-            background: '#00FABF',
-            padding: '8px 24px',
-            borderRadius: 8,
-            fontWeight: 'bold',
-            fontSize: '1.08em',
-            marginBottom: 8,
-            boxShadow: '0 2px 8px #0002',
-            animation: 'fadeInDown 0.4s',
-            letterSpacing: '0.5px',
-            display: 'inline-block',
-          }}>
-            Imagen subida exitosamente
-          </div>
-        )}
+
         <form className="event-form" onSubmit={handleAddEvent} style={{marginBottom: 0}}>
           <input
             type="date"
