@@ -30,6 +30,8 @@ function App() {
   const [selectedIdx, setSelectedIdx] = useState<number | null>(null);
   const [name, setName] = useState('');
   const [touched, setTouched] = useState<{date: boolean; name: boolean; description: boolean}>({date: false, name: false, description: false});
+  const [uploading, setUploading] = useState(false);
+  const [uploadSuccess, setUploadSuccess] = useState(false);
 
   useEffect(() => {
     // Escuchar cambios en tiempo real de ambas colecciones
@@ -92,6 +94,8 @@ function App() {
     try {
       let imageUrl = '';
       if (image) {
+        setUploading(true);
+        setUploadSuccess(false);
         // Convertir imagen a base64
         const toBase64 = (file: File) => new Promise<string>((resolve, reject) => {
           const reader = new FileReader();
@@ -115,23 +119,30 @@ function App() {
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(payload),
         });
-        if (!res.ok) throw new Error('Error subiendo imagen');
+        if (!res.ok) {
+          setUploading(false);
+          throw new Error('Error subiendo imagen');
+        }
         const data = await res.json();
         imageUrl = data.url;
+        setUploading(false);
+        setUploadSuccess(true);
+        setTimeout(() => setUploadSuccess(false), 1800);
       }
       await addDoc(collection(db, 'kushkenos-hitos'), {
-  date,
-  name,
-  description,
-  imageUrl: imageUrl || null,
-  created: Timestamp.now(),
-});
+        date,
+        name,
+        description,
+        imageUrl: imageUrl || null,
+        created: Timestamp.now(),
+      });
       setDate('');
       setName('');
       setDescription('');
       setImage(null);
       setTouched({ date: false, name: false, description: false });
     } catch {
+      setUploading(false);
       setError('Error al guardar el evento. Revisa la configuración de Firebase o el backend.');
     }
   };
@@ -307,6 +318,47 @@ function App() {
         }
       `}</style>
       <div className="event-form-footer">
+        {/* Indicador de carga de imagen */}
+        {uploading && (
+          <div style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: 10,
+            marginBottom: 8,
+            color: '#00332A',
+            fontWeight: 'bold',
+            fontSize: '1.08em',
+          }}>
+            <span className="loader-icon" style={{
+              width: 22,
+              height: 22,
+              border: '3px solid #00FABF',
+              borderTop: '3px solid #fff',
+              borderRadius: '50%',
+              animation: 'spin 0.8s linear infinite',
+              display: 'inline-block',
+            }}></span>
+            Subiendo imagen...
+          </div>
+        )}
+        {/* Mensaje de carga exitosa */}
+        {uploadSuccess && (
+          <div style={{
+            color: '#fff',
+            background: '#00FABF',
+            padding: '8px 24px',
+            borderRadius: 8,
+            fontWeight: 'bold',
+            fontSize: '1.08em',
+            marginBottom: 8,
+            boxShadow: '0 2px 8px #0002',
+            animation: 'fadeInDown 0.4s',
+            letterSpacing: '0.5px',
+            display: 'inline-block',
+          }}>
+            Imagen subida exitosamente
+          </div>
+        )}
         <form className="event-form" onSubmit={handleAddEvent} style={{marginBottom: 0}}>
           <input
             type="date"
@@ -406,21 +458,29 @@ function App() {
 )}
           <button
             type="submit"
+            disabled={uploading}
             style={{
               padding: '0.5em 1em',
               borderRadius: 6,
               border: 'none',
-              background: '#00FABF',
+              background: uploading ? '#b2dfdb' : '#00FABF',
               color: '#00332A',
               fontWeight: 'bold',
-              cursor: 'pointer',
+              cursor: uploading ? 'not-allowed' : 'pointer',
               fontSize: '1em',
               transition: 'background 0.2s',
             }}
           >
-            Agregar evento
+            {uploading ? 'Subiendo...' : 'Agregar evento'}
           </button>
         </form>
+      {/* Animación para el loader */}
+      <style>{`
+        @keyframes spin {
+          0% { transform: rotate(0deg); }
+          100% { transform: rotate(360deg); }
+        }
+      `}</style>
       </div>
     </>
   );
