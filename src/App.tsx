@@ -403,10 +403,8 @@ function App() {
               setTouched(t => ({ ...t, date: true }));
               if (error && e.target.value && name && description) setError('');
             }}
-            max={(() => {
-              const today = new Date();
-              return today.toISOString().split('T')[0];
-            })()}
+            min="2016-01-01"
+            max="2025-08-31"
             style={{
               borderColor: touched.date && !date ? 'red' : undefined,
               outline: touched.date && !date ? '2px solid red' : undefined,
