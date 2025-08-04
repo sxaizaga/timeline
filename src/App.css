@@ -32,10 +32,24 @@
   left: 48%;
   transform: translateX(-50%);
   margin-top: 2.5rem;
-  margin-bottom: 2.5rem;
+  margin-bottom: 0;
   margin-left: 1.8rem;
   background: none;
   overflow-x: auto;
+  height: calc(100vh - 12rem);
+  max-height: calc(100vh - 12rem);
+}
+.timeline-fullwidth::-webkit-scrollbar {
+  height: 8px;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+.timeline-fullwidth::-webkit-scrollbar-thumb {
+  background: #bdbdbd;
+  border-radius: 4px;
+}
+.timeline-fullwidth:hover::-webkit-scrollbar {
+  opacity: 1;
 }
 
 body {
