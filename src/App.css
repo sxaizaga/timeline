@@ -137,7 +137,7 @@ body {
   display: flex;
   flex-direction: row;
   align-items: flex-start;
-  overflow-x: auto;
+  overflow-x: visible;
   overflow-y: visible;
   gap: 3.5rem;
   min-height: 520px;
@@ -160,11 +160,10 @@ body {
   z-index: 0;
 }
 .timeline-list::-webkit-scrollbar {
-  height: 8px;
+  display: none;
 }
 .timeline-list::-webkit-scrollbar-thumb {
-  background: #bdbdbd;
-  border-radius: 4px;
+  display: none;
 }
 .timeline-event {
   display: flex;
