@@ -35,8 +35,15 @@ jobs:
       - name: Build
         run: npm run build
 
-      - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v4
+      - name: Deploy to AWS S3
+        uses: jakejarvis/s3-sync-action@v0.5.1
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./dist
+          args: --acl public-read --delete
+          bucket: ${{ secrets.AWS_S3_BUCKET }}
+          endpoint-url: https://s3.${{ secrets.AWS_REGION }}.amazonaws.com
+          source_dir: ./dist
+        env:
+          AWS_S3_BUCKET: ${{ secrets.AWS_S3_BUCKET }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_REGION: ${{ secrets.AWS_REGION }}
