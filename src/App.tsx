@@ -202,7 +202,9 @@ function App() {
                 </div>
                 {isTop ? (
                   <div className="timeline-card timeline-card--top" style={cardStyle}>
-                    <span className="event-date-label">{event.date}</span>
+                    <span className="event-date-label">
+                      {event.source === 'kushki-hitos' ? event.date.split('-')[0] : event.date}
+                    </span>
                     {event.name && (
                       <span className="event-name" style={{ fontWeight: 700, fontSize: '1.1em', color: cardStyle.color || undefined, marginBottom: 4 }}>{event.name}</span>
                     )}
@@ -210,7 +212,9 @@ function App() {
                   </div>
                 ) : (
                   <div className="timeline-card timeline-card--bottom" style={cardStyle}>
-                    <span className="event-date-label">{event.date}</span>
+                    <span className="event-date-label">
+                      {event.source === 'kushki-hitos' ? event.date.split('-')[0] : event.date}
+                    </span>
                     {event.name && (
                       <span className="event-name" style={{ fontWeight: 700, fontSize: '1.1em', color: cardStyle.color || undefined, marginBottom: 4 }}>{event.name}</span>
                     )}
