@@ -311,92 +311,53 @@ function App() {
           {error}
         </div>
       )}
-      {/* Animaciones para los toasts y loader */}
+      {/* Animación para el toast */}
       <style>{`
         @keyframes fadeInDown {
           from { opacity: 0; transform: translateX(-50%) translateY(-30px); }
           to { opacity: 0.97; transform: translateX(-50%) translateY(0); }
         }
-        @keyframes fadeInScale {
-          from { 
-            opacity: 0; 
-            transform: translate(-50%, -50%) scale(0.8); 
-          }
-          to { 
-            opacity: 1; 
-            transform: translate(-50%, -50%) scale(1); 
-          }
-        }
-        @keyframes spin {
-          0% { transform: rotate(0deg); }
-          100% { transform: rotate(360deg); }
-        }
       `}</style>
-      {/* Loader pantalla completa al subir imagen */}
-      {uploading && (
-        <div
-          style={{
-            position: 'fixed',
-            top: 0,
-            left: 0,
-            width: '100vw',
-            height: '100vh',
-            background: 'rgba(0,0,0,0.45)',
-            zIndex: 99999,
+      <div className="event-form-footer">
+        {/* Indicador de carga de imagen */}
+        {uploading && (
+          <div style={{
             display: 'flex',
             alignItems: 'center',
-            justifyContent: 'center',
-            flexDirection: 'column',
-          }}
-        >
-          <span
-            className="loader-icon"
-            style={{
-              width: 60,
-              height: 60,
-              border: '7px solid #00FABF',
-              borderTop: '7px solid #fff',
+            gap: 10,
+            marginBottom: 8,
+            color: '#00332A',
+            fontWeight: 'bold',
+            fontSize: '1.08em',
+          }}>
+            <span className="loader-icon" style={{
+              width: 22,
+              height: 22,
+              border: '3px solid #00FABF',
+              borderTop: '3px solid #fff',
               borderRadius: '50%',
               animation: 'spin 0.8s linear infinite',
               display: 'inline-block',
-              marginBottom: 24,
-              boxShadow: '0 2px 16px #0003',
-            }}
-          ></span>
-          <span
-            style={{
-              color: '#fff',
-              fontWeight: 'bold',
-              fontSize: '1.35em',
-              textShadow: '0 2px 8px #0007',
-              letterSpacing: '0.5px',
-            }}
-          >
+            }}></span>
             Subiendo imagen...
-          </span>
-        </div>
-      )}
-        {/* Mensaje de carga exitosa centrado pantalla */}
+          </div>
+        )}
+        {/* Mensaje de carga exitosa */}
         {uploadSuccess && (
           <div style={{
-            position: 'fixed',
-            top: '50%',
-            left: '50%',
-            transform: 'translate(-50%, -50%)',
             color: '#fff',
             background: '#00FABF',
-            padding: '16px 32px',
-            borderRadius: 12,
+            padding: '8px 24px',
+            borderRadius: 8,
             fontWeight: 'bold',
-            fontSize: '1.2em',
-            boxShadow: '0 8px 32px rgba(0, 250, 191, 0.3)',
-            animation: 'fadeInScale 0.5s ease-out',
+            fontSize: '1.08em',
+            marginBottom: 8,
+            boxShadow: '0 2px 8px #0002',
+            animation: 'fadeInDown 0.4s',
             letterSpacing: '0.5px',
-            zIndex: 9998,
-            border: '2px solid rgba(255, 255, 255, 0.2)',
-            backdropFilter: 'blur(10px)',
+            display: 'inline-block',
           }}>
-            ✅ Imagen subida exitosamente
+            Imagen subida exitosamente
           </div>
         )}
         <form className="event-form" onSubmit={handleAddEvent} style={{marginBottom: 0}}>
@@ -514,6 +475,13 @@ function App() {
             {uploading ? 'Subiendo...' : 'Agregar evento'}
           </button>
         </form>
+      {/* Animación para el loader */}
+      <style>{`
+        @keyframes spin {
+          0% { transform: rotate(0deg); }
+          100% { transform: rotate(360deg); }
+        }
+      `}</style>
       </div>
     </>
   );
